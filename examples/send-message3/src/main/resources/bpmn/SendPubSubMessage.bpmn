@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0md0fge" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.11.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.18.0">
+  <bpmn:collaboration id="Collaboration_124cdv4">
+    <bpmn:participant id="Participant_SendPubSubMessage" name="Send PubSub Message" processRef="SendPubSubMessage" />
+  </bpmn:collaboration>
+  <bpmn:process id="SendPubSubMessage" name="Send PubSub Message" isExecutable="true" camunda:historyTimeToLive="P7D">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0j8gbxs</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="Task_DefinePayload" name="Define Payload">
+      <bpmn:documentation>Complete job description</bpmn:documentation>
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="data" label="Data (String or JSON)" type="string" defaultValue="Hello PubSub">
+            <camunda:properties />
+          </camunda:formField>
+          <camunda:formField id="projectName" label="PubSub Project Name" type="string" defaultValue="${projectName}" />
+          <camunda:formField id="topicName" label="PubSub Topic Name" type="string" defaultValue="${topicName}" />
+        </camunda:formData>
+        <camunda:executionListener delegateExpression="${beforePubSubConnector}" event="start" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0j8gbxs</bpmn:incoming>
+      <bpmn:outgoing>Flow_0oe4zpl</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Task_SendPubSubMessage" name="Send PubSub with Connector" camunda:asyncBefore="true">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="data">${data}</camunda:inputParameter>
+            <camunda:inputParameter name="attributes">${execution.getVariables()}</camunda:inputParameter>
+            <camunda:inputParameter name="projectName">${projectName}</camunda:inputParameter>
+            <camunda:inputParameter name="topicName">${topicName}</camunda:inputParameter>
+            <camunda:outputParameter name="messageId">${messageId}</camunda:outputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>pubsub-send</camunda:connectorId>
+        </camunda:connector>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0oe4zpl</bpmn:incoming>
+      <bpmn:outgoing>Flow_025cw3c</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="Event_0eoxfn3">
+      <bpmn:incoming>Flow_1fvzced</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="Task_ReviewResults" name="Review Results">
+      <bpmn:incoming>Flow_025cw3c</bpmn:incoming>
+      <bpmn:outgoing>Flow_1fvzced</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_0j8gbxs" sourceRef="StartEvent_1" targetRef="Task_DefinePayload" />
+    <bpmn:sequenceFlow id="Flow_0oe4zpl" sourceRef="Task_DefinePayload" targetRef="Task_SendPubSubMessage" />
+    <bpmn:sequenceFlow id="Flow_025cw3c" sourceRef="Task_SendPubSubMessage" targetRef="Task_ReviewResults" />
+    <bpmn:sequenceFlow id="Flow_1fvzced" sourceRef="Task_ReviewResults" targetRef="Event_0eoxfn3" />
+    <bpmn:textAnnotation id="TextAnnotation_1jh2762">
+      <bpmn:text>PubSub Message ID</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:textAnnotation id="TextAnnotation_1nvr2xe">
+      <bpmn:text>Any List of Variables</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:textAnnotation id="TextAnnotation_09i82a9">
+      <bpmn:text>Input: all process variables + Data</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:textAnnotation id="TextAnnotation_0ql7fpc">
+      <bpmn:text>Camunda Connector Extension for PubSub</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0y27gv8" sourceRef="Task_ReviewResults" targetRef="TextAnnotation_1jh2762" />
+    <bpmn:association id="Association_1d49je9" sourceRef="StartEvent_1" targetRef="TextAnnotation_1nvr2xe" />
+    <bpmn:association id="Association_0a28tae" sourceRef="Task_SendPubSubMessage" targetRef="TextAnnotation_09i82a9" />
+    <bpmn:association id="Association_0foo0pr" sourceRef="Task_SendPubSubMessage" targetRef="TextAnnotation_0ql7fpc" />
+    <bpmn:textAnnotation id="TextAnnotation_0ff0wqd">
+      <bpmn:text>Project/Topic Name, Data (String or JSON)</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1w6ff84" sourceRef="Task_DefinePayload" targetRef="TextAnnotation_0ff0wqd" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_124cdv4">
+      <bpmndi:BPMNShape id="Participant_1ewbjgy_di" bpmnElement="Participant_SendPubSubMessage" isHorizontal="true">
+        <dc:Bounds x="129" y="80" width="721" height="270" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0ff0wqd_di" bpmnElement="TextAnnotation_0ff0wqd">
+        <dc:Bounds x="250" y="280" width="142" height="41" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="192" y="192" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0tffhxm_di" bpmnElement="Task_DefinePayload">
+        <dc:Bounds x="280" y="170" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_132d09v_di" bpmnElement="Task_SendPubSubMessage">
+        <dc:Bounds x="450" y="170" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0eoxfn3_di" bpmnElement="Event_0eoxfn3">
+        <dc:Bounds x="752" y="192" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_11o7782_di" bpmnElement="Task_ReviewResults">
+        <dc:Bounds x="610" y="170" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1jh2762_di" bpmnElement="TextAnnotation_1jh2762">
+        <dc:Bounds x="620" y="280" width="132" height="30" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1nvr2xe_di" bpmnElement="TextAnnotation_1nvr2xe">
+        <dc:Bounds x="180" y="120" width="100" height="41" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_09i82a9_di" bpmnElement="TextAnnotation_09i82a9">
+        <dc:Bounds x="442" y="110" width="115" height="41" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0ql7fpc_di" bpmnElement="TextAnnotation_0ql7fpc">
+        <dc:Bounds x="434" y="280" width="132" height="45" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_1w6ff84_di" bpmnElement="Association_1w6ff84">
+        <di:waypoint x="324" y="250" />
+        <di:waypoint x="321" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0j8gbxs_di" bpmnElement="Flow_0j8gbxs">
+        <di:waypoint x="228" y="210" />
+        <di:waypoint x="280" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0oe4zpl_di" bpmnElement="Flow_0oe4zpl">
+        <di:waypoint x="380" y="210" />
+        <di:waypoint x="450" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_025cw3c_di" bpmnElement="Flow_025cw3c">
+        <di:waypoint x="550" y="210" />
+        <di:waypoint x="610" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1fvzced_di" bpmnElement="Flow_1fvzced">
+        <di:waypoint x="710" y="210" />
+        <di:waypoint x="752" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0y27gv8_di" bpmnElement="Association_0y27gv8">
+        <di:waypoint x="665" y="250" />
+        <di:waypoint x="668" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1d49je9_di" bpmnElement="Association_1d49je9">
+        <di:waypoint x="215" y="193" />
+        <di:waypoint x="223" y="161" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0a28tae_di" bpmnElement="Association_0a28tae">
+        <di:waypoint x="500" y="170" />
+        <di:waypoint x="500" y="151" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0foo0pr_di" bpmnElement="Association_0foo0pr">
+        <di:waypoint x="492" y="250" />
+        <di:waypoint x="487" y="280" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

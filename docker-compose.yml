@@ -1,0 +1,25 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./examples/send-message3/Dockerfile
+    image: 'camunda-bpm-pubsub/send-message3'
+    ports:
+      - "8888:8888"
+    depends_on:
+      - pubsub
+    environment:
+      - server.port=8888
+      # using pubsub emulator
+      - PUBSUB_EMULATOR_HOST=pubsub:8085
+      - PUBSUB_PROJECT_NAME=my-project-id
+      - PUBSUB_TOPIC_NAME=my-topic-id
+      # using real pubsub
+#      - PUBSUB_PROJECT_NAME=my-project-id
+#      - PUBSUB_TOPIC_NAME=my-topic-id
+#      - GOOGLE_APPLICATION_CREDENTIALS=classpath:your-pubsub-credentials.json
+  pubsub: # important: grpc host name doesn't support underscore symbol!! example: pubsub_emulator is not valid
+    image: google/cloud-sdk
+    entrypoint: "gcloud beta emulators pubsub start --host-port=0.0.0.0:8085 --project=my-pubsub-project-id"
+    ports:
+      - "8085:8085"

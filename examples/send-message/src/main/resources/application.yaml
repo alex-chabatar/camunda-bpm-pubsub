@@ -1,0 +1,34 @@
+camunda.bpm:
+  webapp:
+    index-redirect-enabled: true
+  admin-user:
+    id: admin
+    password: admin
+  filter:
+    create: All Tasks
+  metrics:
+    enabled: true
+    db-reporter-activate: true
+management:
+  security:
+    enabled: false
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+      group:
+        custom:
+          show-components: always
+          show-details: ALWAYS
+    prometheus:
+      enabled: true
+  endpoints:
+    enabled-by-default: true
+    web:
+      exposure:
+        include: health,metrics,info,ready,prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
