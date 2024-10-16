@@ -4,7 +4,7 @@
 
   <parent>
     <groupId>camunda-bpm-examples</groupId>
-    <artifactId>camunda-bpm-pubsub-extension-root</artifactId>
+    <artifactId>camunda-bpm-pubsub-extension-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
 

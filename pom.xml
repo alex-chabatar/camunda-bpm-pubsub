@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>camunda-bpm-examples</groupId>
-  <artifactId>camunda-bpm-pubsub-root</artifactId>
+  <artifactId>camunda-bpm-pubsub-parent</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Camunda Automation PubSub Platform</name>

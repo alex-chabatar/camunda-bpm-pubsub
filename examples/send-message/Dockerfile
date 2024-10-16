@@ -1,9 +1,9 @@
 FROM maven:3.8.4-openjdk-17-slim AS build
 
-COPY examples /home/app/libs/java/camunda-bpm-pubsub-root/examples
-COPY extension /home/app/libs/java/camunda-bpm-pubsub-root/extension
-COPY pom.xml /home/app/libs/java/camunda-bpm-pubsub-root
-RUN mvn -f /home/app/libs/java/camunda-bpm-pubsub-root/pom.xml clean install
+COPY examples /home/app/libs/java/camunda-bpm-pubsub-parent/examples
+COPY extension /home/app/libs/java/camunda-bpm-pubsub-parent/extension
+COPY pom.xml /home/app/libs/java/camunda-bpm-pubsub-parent
+RUN mvn -f /home/app/libs/java/camunda-bpm-pubsub-parent/pom.xml clean install
 
 COPY examples/send-message/src /home/app/src
 COPY examples/send-message/pom.xml /home/app
