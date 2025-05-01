@@ -17,7 +17,7 @@ A community extension for Camunda Platform 7 to integrate [Google PubSub](https:
     * camunda version 7.19.0 
 * Version for <mark>Spring Boot 3</mark> (actual 3.3.5) and <mark>JDK17+</mark>
     * camunda-bpm-pubsub-spring-boot3
-    * camunda version 7.22.0
+    * camunda version 7.23.0
 
 ### For Spring Boot
 
